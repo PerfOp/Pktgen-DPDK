@@ -1,0 +1,12 @@
+set 0 src mac 60:45:bd:c0:90:f7
+set 0 src ip 10.2.1.104/32
+set 0 sport 1234
+ 
+set 0 dst mac 12:34:56:78:9a:bc
+set 0 dst ip 10.2.1.106
+set 0 dport 4321
+ 
+set 0 size 64
+set 0 proto udp
+set 0 count 0
+start 0
