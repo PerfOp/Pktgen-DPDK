@@ -1,11 +1,12 @@
 #!/bin/bash
 ##############################################################
-# File Name: rx-mon.sh
+# File Name: tx.sh
 # Author:
 # mail:
 # Created Time: Mon Sep 15 13:37:09 2025
 ##############################################################
 
+source ./hosts.sh
 source ./utils.sh
 
 if [ -z "$1" ]; then
@@ -13,13 +14,18 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-pci=$(func_get_pci $1);
-echo $pci
+PCI=$(func_get_pci $1);
 
-# rx monitoring
+echo $PCI
+EAL_ARGS="-l 0-3 -n 4 -a $PCI"
 
-$pmd -l 0-3 -n 4 -a $pci \
-        -- --port-topology=chained \
-        --nb-cores=3 \
-        --forward-mode=rxonly \
-        --stats-period 1
+## 1 interaction mode for dpdk-pmd
+#$pmd $EAL_ARGS -- -i --port-topology=chained
+
+# 2 txonly for send
+# * Capture: dpdk-dumpcap -c 100 -w capture.pcapng
+# * Check:   tcpdump -nnn -e -r capture.pcapng
+# https://doc.dpdk.org/guides/testpmd_app_ug/run_app.html#testpmd-command-line-options
+$pmd $EAL_ARGS \
+    -- -i --forward-mode=rxonly --stats-period=1 --auto-start
+    #--nb-cores=3 --rxq=4 --txq=4 --rxd=1024 --txd=1024 --mbcache=512 \
