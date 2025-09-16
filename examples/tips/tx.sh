@@ -6,6 +6,7 @@
 # Created Time: Mon Sep 15 13:37:09 2025
 ##############################################################
 
+source ./hosts.sh
 source ./utils.sh
 
 if [ -z "$1" ]; then
@@ -22,13 +23,14 @@ EAL_ARGS="-l 0-3 -n 4 -a $PCI"
 #$pmd $EAL_ARGS -- -i --port-topology=chained
 
 # 2 txonly for send
-# Input "set 0 count 0 \n start 0 " to start send
-# Capture: dpdk-dumpcap -c 100 -w /tmp/capture.pcapng
+# * Capture: dpdk-dumpcap -c 100 -w capture.pcapng
+# * Check:   tcpdump -nnn -e -r capture.pcapng
+# https://doc.dpdk.org/guides/testpmd_app_ug/run_app.html#testpmd-command-line-options
 $pmd $EAL_ARGS \
     -- -i --forward-mode=txonly \
-    --port-topology=chained --txpkts=64 --stats-period=1
-#\
-#--nb-cores=3 \
-#--forward-mode=txonly \
-#--eth-peer=0,7c:1e:52:08:d9:22 \
-#--stats-period 1
+    --port-topology=chained \
+    --txpkts=64 \
+    --tx-ip=$srcip,$dstip \
+    --tx-udp=$srcport,$dstport \
+    --stats-period=1
+#--nb-cores=3
