@@ -26,6 +26,6 @@ EAL_ARGS="-l 0-3 -n 4 -a $PCI"
 # * Capture: dpdk-dumpcap -c 100 -w capture.pcapng
 # * Check:   tcpdump -nnn -e -r capture.pcapng
 # https://doc.dpdk.org/guides/testpmd_app_ug/run_app.html#testpmd-command-line-options
-$pmd $EAL_ARGS \
+$PMD_BIN $EAL_ARGS \
     -- -i --forward-mode=macswap --stats-period=1 --auto-start
     #--nb-cores=3 --rxq=4 --txq=4 --rxd=1024 --txd=1024 --mbcache=512 \

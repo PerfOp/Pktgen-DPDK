@@ -27,10 +27,11 @@ EAL_ARGS="-l 0-3 -n 4 -a $PCI"
 # * Check:   tcpdump -nnn -e -r capture.pcapng
 # https://doc.dpdk.org/guides/testpmd_app_ug/run_app.html#testpmd-command-line-options
 # In command lines: show port stats all
-$pmd $EAL_ARGS \
+$PMD_BIN $EAL_ARGS \
     -- -i --forward-mode=txonly \
     --port-topology=chained \
-    --txpkts=64 \
+    --burst=$BURSTNUM \
+    --txpkts=$PKTSIZE \
     --tx-ip=$srcip,$dstip \
     --tx-udp=$srcport,$dstport \
     --stats-period=1
